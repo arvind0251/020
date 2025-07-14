@@ -1,23 +1,20 @@
-"""Configuration for Quotex Telegram Bot (TwelveData edition).
+# config.py  (hard‑coded version)
 
-Environment variables you must set:
-  BOT_TOKEN   – Telegram bot token
-  GROUP_ID    – Channel / group numeric ID, e.g. -1001234567890
-  ALL_PAIRS   – Comma list: "EUR/USD,GBP/JPY,BTC/USD"
-  TD_API_KEY  – TwelveData API key (free tier works)
-"""
+# ─── Telegram & Bot settings ─────────────────────────────────────────
+BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"     # ← यहाँ अपना BotFather token भरें
+GROUP_ID  = -1001234567890                # ← group / channel numeric ID
 
-import os
+# जो‑जो пары (symbols) चाहिए—लिस्ट में लिखें
+ALL_PAIRS = [
+    "EUR/USD",
+    "GBP/JPY",
+    "BTC/USD",
+]
 
-BOT_TOKEN: str = os.getenv("BOT_TOKEN", "")
-if not BOT_TOKEN:
-    raise RuntimeError("Please set BOT_TOKEN.")
+# ─── Data‑feed (TwelveData) ──────────────────────────────────────────
+TD_API_KEY = "YOUR_TWELVEDATA_API_KEY"    # फ्री टियर key भी चलेगी
 
-GROUP_ID: int = int(os.getenv("GROUP_ID", "-1001234567890"))
+# ─── Misc ────────────────────────────────────────────────────────────
+TIMEZONE = "Asia/Kolkata"                 # टाइम‑स्टैम्प IST में
 
-ALL_PAIRS = [s.strip() for s in os.getenv(
-    "ALL_PAIRS", "EUR/USD,GBP/JPY,BTC/USD").split(",")]
-
-TD_API_KEY: str | None = os.getenv("TD_API_KEY")  # may be None in demo mode
-
-TIMEZONE = "Asia/Kolkata"
+# बस! बाकी कोड इस फाइल के वैरिएबल्स सीधे पढ़ेगा।
