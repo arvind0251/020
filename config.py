@@ -1,10 +1,10 @@
 # config.py  (hard‑coded version)
 
-# ─── Telegram & Bot settings ─────────────────────────────────────────
-BOT_TOKEN = "7864815464:AAGiwjulKLxnDP9MuaVhhQZ8fhoPRz3uv2Q"     # ← यहाँ अपना BotFather token भरें
-GROUP_ID  = -1002711451967                # ← group / channel numeric ID
+# ─── Telegram & Bot settings ────────────────────────────────────────
+BOT_TOKEN = "7864815464:AAGiwjulKLxnDP9MuaVhhQZ8fhoPRz3uv2Q"   # ← BotFather token
+GROUP_ID  = -1002711451967                                     # ← group / channel ID
 
-# जो‑जो пары (symbols) चाहिए—लिस्ट में लिखें
+# ─── Pairs list ────────────────────────────────────────────────────
 ALL_PAIRS = [
     # --- Majors (7) ---
     "EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF",
@@ -15,18 +15,18 @@ ALL_PAIRS = [
     "GBP/JPY", "GBP/CHF", "GBP/AUD", "GBP/CAD",
     "AUD/JPY", "AUD/NZD", "AUD/CHF", "AUD/CAD",
     "NZD/JPY", "NZD/CHF", "NZD/CAD",
-    "CAD/JPY", "CAD/CHF",
-    "CHF/JPY",
+    "CAD/JPY", "CAD/CHF", "CHF/JPY",
 
     # --- Crypto spot (10) ---
     "BTC/USD", "ETH/USD", "BNB/USD", "SOL/USD", "XRP/USD",
     "ADA/USD", "DOGE/USD", "DOT/USD", "LTC/USD", "SHIB/USD",
 ]
 
-# ─── Data‑feed (TwelveData) ──────────────────────────────────────────
-TD_API_KEY = "d1q6pipr01qrh89og8e0d1q6pipr01qrh89og8eg"    # फ्री टियर key भी चलेगी
+# ─── Data‑feed (Finnhub) ───────────────────────────────────────────
+FINNHUB_API_KEY = "d1q6pipr01qrh89og8e0d1q6pipr01qrh89og8eg"  # ← your Finnhub key
 
-# ─── Misc ────────────────────────────────────────────────────────────
-TIMEZONE = "Asia/Kolkata"                 # टाइम‑स्टैम्प IST में
+# (अगर TwelveData अब इस्तेमाल नहीं कर रहे तो None छोड़ दें)
+TD_API_KEY = None
 
-# बस! बाकी कोड इस फाइल के वैरिएबल्स सीधे पढ़ेगा।
+# ─── Misc ──────────────────────────────────────────────────────────
+TIMEZONE = "Asia/Kolkata"    # timestamps in IST
