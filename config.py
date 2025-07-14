@@ -24,7 +24,7 @@ ALL_PAIRS = [
 ]
 
 # ─── Data‑feed (TwelveData) ──────────────────────────────────────────
-TD_API_KEY = "bc62a9b2c756434fadb26a148d515b36"    # फ्री टियर key भी चलेगी
+TD_API_KEY = "d1q6pipr01qrh89og8e0d1q6pipr01qrh89og8eg"    # फ्री टियर key भी चलेगी
 
 # ─── Misc ────────────────────────────────────────────────────────────
 TIMEZONE = "Asia/Kolkata"                 # टाइम‑स्टैम्प IST में
