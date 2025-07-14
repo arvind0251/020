@@ -1,28 +1,28 @@
-"""Live data‑feed module (TwelveData).
+"""Live data‑feed module (Finnhub).
 
-अगर TD_API_KEY गायब हो या API‑limit हिट हो जाए तो
+अगर FINNHUB_API_KEY गायब हो या rate‑limit हिट हो जाए तो
 फंक्शन random demo candles लौटाता है ताकि बोट बाकी काम करता रहे।
 """
 
 import pandas as pd
 import aiohttp
 from datetime import datetime, timedelta
-import random
-from config import TD_API_KEY
+import random, time
+from config import FINNHUB_API_KEY   # ←  config.py में यह key जोड़ें
 
-BASE_URL = "https://api.twelvedata.com/time_series"
-_INTERVAL = {"1m": "1min", "5m": "5min"}
+BASE_URL = "https://finnhub.io/api/v1/forex/candle"
+_RESOLUTION = {"1m": "1", "5m": "5"}   # Finnhub uses numbers for minutes
 
 # ────────────────────────────────────────────────────────────────
 def _pair_to_symbol(pair: str) -> str:
-    """TwelveData expects slash‑format symbols, e.g. 'EUR/USD'."""
-    return pair.strip().upper()
-
-# ────────────────────────────────────────────────────────────────
-async def _fetch(session: aiohttp.ClientSession, params: dict):
-    async with session.get(BASE_URL, params=params, timeout=10) as r:
-        r.raise_for_status()
-        return await r.json()
+    """
+    Forex: 'EUR/USD' -> 'OANDA:EUR_USD'
+    Crypto: 'BTC/USD' -> 'BINANCE:BTCUSDT'
+    """
+    base, quote = pair.upper().split("/")
+    if base in {"BTC","ETH","BNB","SOL","XRP","ADA","DOGE","DOT","LTC","SHIB"}:
+        return f"BINANCE:{base}USDT"
+    return f"OANDA:{base}_{quote}"
 
 # ────────────────────────────────────────────────────────────────
 async def get_live_candles(pair: str, timeframe: str = "1m", limit: int = 200):
@@ -30,39 +30,38 @@ async def get_live_candles(pair: str, timeframe: str = "1m", limit: int = 200):
     Return DataFrame with columns:
     ['datetime','open','high','low','close','volume'] oldest → newest
     """
-    # demo fallback
-    if TD_API_KEY is None:
+    if not FINNHUB_API_KEY:
         return _demo_candles(limit)
 
+    end_ts   = int(time.time())
+    start_ts = end_ts - limit * 60
+
     params = {
-        "symbol":   _pair_to_symbol(pair),
-        "interval": _INTERVAL.get(timeframe, "1min"),
-        "outputsize": str(limit),
-        "apikey":   TD_API_KEY,
-        "format":   "JSON",
+        "symbol": _pair_to_symbol(pair),
+        "resolution": _RESOLUTION.get(timeframe, "1"),
+        "from": start_ts,
+        "to":   end_ts,
+        "token": FINNHUB_API_KEY,
     }
 
     async with aiohttp.ClientSession() as sess:
         try:
-            js   = await _fetch(sess, params)
-            vals = js.get("values")
-            if not vals:
-                raise ValueError(js.get("message", "no data"))
+            async with sess.get(BASE_URL, params=params, timeout=8) as r:
+                js = await r.json()
+            if js.get("s") != "ok":
+                raise ValueError(js.get("error", "invalid response"))
         except Exception as e:
-            print("TwelveData error → demo data:", e)
+            print("Finnhub error → demo data:", e)
             return _demo_candles(limit)
 
-    # Build DataFrame
-    df = pd.DataFrame(vals[::-1])  # oldest first
-    df["datetime"] = pd.to_datetime(df["datetime"])
-
-    # TwelveData कभी‑कभी 'volume' भेजता ही नहीं (FX).
-    if "volume" not in df.columns:
-        df["volume"] = 0
-
-    # Cast numeric columns
-    num_cols = ["open", "high", "low", "close", "volume"]
-    df[num_cols] = df[num_cols].astype(float)
+    df = pd.DataFrame({
+        "datetime": pd.to_datetime(js["t"], unit="s"),
+        "open":  js["o"],
+        "high":  js["h"],
+        "low":   js["l"],
+        "close": js["c"],
+        "volume": js.get("v", [0]*len(js["c"]))
+    })
 
     return df.tail(limit)
 
