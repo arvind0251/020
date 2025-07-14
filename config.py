@@ -6,9 +6,21 @@ GROUP_ID  = -1002711451967                # ← group / channel numeric ID
 
 # जो‑जो пары (symbols) चाहिए—लिस्ट में लिखें
 ALL_PAIRS = [
-    "EUR/USD",
-    "GBP/JPY",
-    "BTC/USD",
+    # --- Majors (7) ---
+    "EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF",
+    "AUD/USD", "NZD/USD", "USD/CAD",
+
+    # --- Popular Crosses (20) ---
+    "EUR/GBP", "EUR/JPY", "EUR/CHF", "EUR/AUD", "EUR/CAD",
+    "GBP/JPY", "GBP/CHF", "GBP/AUD", "GBP/CAD",
+    "AUD/JPY", "AUD/NZD", "AUD/CHF", "AUD/CAD",
+    "NZD/JPY", "NZD/CHF", "NZD/CAD",
+    "CAD/JPY", "CAD/CHF",
+    "CHF/JPY",
+
+    # --- Crypto spot (10) ---
+    "BTC/USD", "ETH/USD", "BNB/USD", "SOL/USD", "XRP/USD",
+    "ADA/USD", "DOGE/USD", "DOT/USD", "LTC/USD", "SHIB/USD",
 ]
 
 # ─── Data‑feed (TwelveData) ──────────────────────────────────────────
