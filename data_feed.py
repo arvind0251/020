@@ -14,7 +14,7 @@ BASE_URL = "https://api.twelvedata.com/time_series"
 _INTERVAL = {"1m": "1min", "5m": "5min"}
 
 def _pair_to_symbol(pair: str) -> str:
-    return pair.replace("/", "").upper()
+    return pair.strip().upper()  # e.g., "EUR/USD" → "EUR/USD"
 
 async def _fetch(session: aiohttp.ClientSession, params: dict):
     async with session.get(BASE_URL, params=params, timeout=10) as r:
